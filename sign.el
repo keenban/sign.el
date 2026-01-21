@@ -296,12 +296,7 @@ If signal-cli is not in your $PATH, provide the absolute path here."
                    (file-name (alist-get 'file sticker-info)))
 
               (when file-name
-                (let ((full-path (expand-file-name file-name pack-dir)))
-                  (if (file-exists-p full-path)
-                      full-path
-                    ;; Sometimes files have no extension in manifest but .webp on disk
-                    (let ((webp-path (concat full-path ".webp")))
-                      (if (file-exists-p webp-path) webp-path nil))))))
+                (expand-file-name file-name pack-dir)))
           (error nil))
 
       ;; METHOD 2: Fallback (Guessing)
