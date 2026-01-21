@@ -23,7 +23,7 @@
 ;; Sign.el provides a lightweight, text-based interface for Signal
 ;; within Emacs. It communicates with a running 'signal-cli' daemon
 ;; via JSON-RPC.
-;;
+
 ;; Prerequisites:
 ;; You must have 'signal-cli' installed and your account linked/registered.
 ;; Start the daemon outside Emacs or let Signel manage the process.
