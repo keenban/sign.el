@@ -25,8 +25,8 @@
 ;; via JSON-RPC.
 
 ;; Prerequisites:
-;; You must have 'signal-cli' installed and your account linked/registered.
-;; Start the daemon outside Emacs or let Signel manage the process.
+;; 1. signal-cli installed and in $PATH.
+;; 2. A registered/linked Signal account.
 
 ;;; Code:
 
