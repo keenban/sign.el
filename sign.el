@@ -302,7 +302,8 @@ If signal-cli is not in your $PATH, provide the absolute path here."
   (visual-line-mode 1)
   (add-hook 'post-command-hook #'signel-guard-cursor nil t)
   (local-set-key (kbd "RET") #'signel-send-input)
-  (local-set-key (kbd "C-c C-c") #'signel-send-input))
+  (local-set-key (kbd "C-c C-c") #'signel-send-input)
+  (local-set-key (kbd "C-c C-a") #'signel-attach-file))
 
 (defun signel-get-buffer (id)
   "Get or create a chat buffer for ID."
@@ -423,15 +424,16 @@ If signal-cli is not in your $PATH, provide the absolute path here."
   (unless signel-chat-id
     (user-error "Not in a Signal chat buffer"))
 
-  (let ((is-group (not (string-prefix-p "+" signel-chat-id)))
-        (params `((attachments . [,file-path]))))
+  (let* ((full-path (expand-file-name file-path))
+         (is-group (not (string-prefix-p "+" signel-chat-id)))
+         (params `((attachments . [,full-path]))))
 
     (if is-group
         (push `(groupId . ,signel-chat-id) params)
       (push `(recipient . [,signel-chat-id]) params))
 
     (signel-send-rpc "send" params (current-buffer))
-    (signel-insert-msg signel-chat-id "Me" (format "[Sending: %s]" (file-name-nondirectory file-path)) nil nil t)))
+    (signel-insert-msg signel-chat-id "Me" (format "[Sending: %s]" (file-name-nondirectory full-path)) nil nil t)))
 
 ;;;###autoload
 (defun signel-chat (recipient)
