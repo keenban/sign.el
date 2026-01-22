@@ -328,20 +328,6 @@ If TARGET-BUFFER is non-nil, map the request ID to that buffer for error handlin
          ((file-exists-p path-no-ext) path-no-ext)
          (t nil))))))
 
-(defun signel--guess-image-type (file)
-  "Read the first few bytes of FILE to determine image type (png, webp, gif)."
-  (with-temp-buffer
-    (set-buffer-multibyte nil)
-    (insert-file-contents-literally file nil 0 12)
-    (goto-char (point-min))
-    (cond
-     ((looking-at "\x89PNG") 'png)
-     ((looking-at "GIF8") 'gif)
-     ((and (looking-at "RIFF")
-           (ignore-errors (forward-char 8) (looking-at "WEBP")))
-      'webp)
-     (t nil))))
-
 (defun signel--convert-apng-to-gif (file)
   "Convert APNG FILE to a temporary GIF using ImageMagick `convert'.
 Returns the path to the temporary GIF.  Uses `unwind-protect' to ensure cleanup."
@@ -375,7 +361,7 @@ Returns the path to the temporary GIF.  Uses `unwind-protect' to ensure cleanup.
       (insert "\n")
       (cond
        ((and file (file-exists-p file))
-        (let* ((type (signel--guess-image-type file))
+        (let* ((type (image-type-from-file-header file))
                (final-file file)
                (final-type type)
                (converted nil))
